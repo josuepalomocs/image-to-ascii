@@ -1,8 +1,13 @@
 import Canvas from "./Canvas";
 
+interface BrightnessMapEntry {
+  character: string;
+  value: number;
+}
+
 export default class FontBitMapCanvas extends Canvas {
   private readonly imageDataArray: ImageData[];
-  private readonly brightnessMap: Map<string, number>;
+  private readonly brightnessMapArray: BrightnessMapEntry[];
 
   public constructor(
     image: HTMLImageElement,
@@ -15,8 +20,7 @@ export default class FontBitMapCanvas extends Canvas {
 
     this.imageDataArray = [];
     this.createImageDataArray(image, charactersPerRow, charactersPerColumn);
-    this.brightnessMap = new Map<string, number>();
-    this.populateBrightnessMap(characters);
+    this.brightnessMapArray = this.populateBrightnessMap(characters);
   }
 
   private createImageDataArray(
@@ -51,9 +55,28 @@ export default class FontBitMapCanvas extends Canvas {
       numPixelsPerCharacter[i] = numPixels;
     }
 
+    let brightnessMapArray: BrightnessMapEntry[] = [];
+
     for (let i = 0; i < numPixelsPerCharacter.length; i++) {
-      this.brightnessMap.set(characters[i], numPixelsPerCharacter[i]);
+      const entry = {
+        character: characters[i],
+        value: numPixelsPerCharacter[i],
+      };
+
+      brightnessMapArray[i] = entry;
     }
-    console.log(this.brightnessMap);
+
+    brightnessMapArray.sort((a, b) => {
+      if (a.value <= b.value) {
+        return -1;
+      }
+      return 1;
+    });
+
+    return brightnessMapArray;
+  }
+
+  public getBrightnessMapArray() {
+    return this.brightnessMapArray;
   }
 }
