@@ -1,4 +1,4 @@
-export default class ImageApi {
+export default class Image {
   private readonly image: HTMLImageElement;
 
   public constructor(src: string) {

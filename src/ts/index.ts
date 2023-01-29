@@ -1,13 +1,35 @@
 import "../style.css";
-import CanvasApi from "./CanvasApi";
-import ImageApi from "./ImageApi";
+import Image from "./Image";
+import AsciiCanvas from "./AsciiCanvas";
+import FontBitMapCanvas from "./FontBitMapCanvas";
 
-const imageApi = new ImageApi("image.jpg");
-const image = await imageApi.getImage();
+const asciiCanvasImage = await new Image("image.jpg").getImage();
+console.log(asciiCanvasImage.src);
 
-if (image) {
-  const canvasApi = new CanvasApi(image);
-  const canvas = canvasApi.getCanvas();
+if (asciiCanvasImage) {
+  const canvas = new AsciiCanvas(
+    asciiCanvasImage,
+    window.innerWidth,
+    window.innerHeight,
+    8,
+    8
+  ).getCanvas();
 
   document.querySelector<HTMLDivElement>("#app")!.appendChild(canvas);
+}
+
+const fontBitMapImage = await new Image("fontbitmap.png").getImage();
+
+const characters =
+  " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+
+if (fontBitMapImage) {
+  const canvas = new FontBitMapCanvas(
+    fontBitMapImage,
+    characters.split(""),
+    19,
+    5
+  ).getCanvas();
+
+  // document.querySelector<HTMLDivElement>("#app")!.appendChild(canvas);
 }
